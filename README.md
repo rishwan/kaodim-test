@@ -28,8 +28,8 @@ while providing the child components with the current question and a function to
 ## Installation
 
 ```bash
-git clone https://github.com/notrab/create-react-app-redux.git
-cd create-react-app-redux
+git clone https://github.com/rishwan/kaodim-test.git
+cd kaodim-test
 yarn
 ```
 
@@ -39,4 +39,4 @@ yarn
 yarn start
 ```
 
-This boilerplate is built using [create-react-app](https://github.com/facebook/create-react-app) so you will want to read the User Guide for more goodies.
+This boilerplate is built using [create-react-app](https://github.com/facebook/create-react-app).
