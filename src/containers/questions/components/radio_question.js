@@ -47,6 +47,7 @@ class RadioQuestion extends React.Component {
     return (
       <React.Fragment>
         <p className={"prompt text-center"}>{this.props.question.prompt}</p>
+        <p className={"text-center"}>{this.props.question.is_required ? "* Required" : "* Optional"}</p>
         {this.renderChoices()}
       </React.Fragment>
     )

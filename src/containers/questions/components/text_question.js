@@ -65,6 +65,7 @@ class TextQuestion extends React.Component {
     return (
       <React.Fragment>
         <p className={"prompt text-center"}>{this.props.question.prompt}</p>
+        <p className={"text-center"}>{this.props.question.is_required ? "* Required" : "* Optional"}</p>
         <div className={"d-block d-sm-none"}>
           <textarea className="form-control" rows="3" placeholder={"Visible on XS"} value={this.state.answer} autoComplete="off" name={this.props.question.id} onChange={this.onChange}/>
         </div>
