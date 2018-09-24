@@ -12,14 +12,14 @@ const questionsList = {
       "id": 2448,
       "question_type": "TextQuestion",
       "prompt": "What is your second answer?",
-      "is_required": true,
-      "min_char_length": 100
+      "is_required": false,
+      "min_char_length": 15
     },
     {
       "id": 2500,
       "question_type": "TextQuestion",
       "prompt": "What is your third answer?",
-      "is_required": true,
+      "is_required": false,
       "min_char_length": 1,
     },
       {
@@ -37,7 +37,7 @@ const questionsList = {
         "id": 2502,
         "question_type": "RadioQuestion",
         "prompt": "What is your fifth answer?",
-        "is_required": true,
+        "is_required": false,
         "choices": [
           {"key": 0, "value": "1", "text": "radio choice 1"},
           {"key": 1, "value": "2", "text": "radio choice 2"},
@@ -48,14 +48,7 @@ const questionsList = {
         "id": 2503,
         "question_type": "FileUpload",
         "prompt": "Upload a file",
-        "is_required": true,
-        "allowed_mime_types": "image/jpeg, image/png"
-      },
-      {
-        "id": 2506,
-        "question_type": "UnknoqnType",
-        "prompt": "Upload a file 2",
-        "is_required": true,
+        "is_required": false,
         "allowed_mime_types": "image/jpeg, image/png"
       }
   ]

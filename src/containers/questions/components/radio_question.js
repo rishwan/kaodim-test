@@ -6,7 +6,7 @@ class RadioQuestion extends React.Component {
     super(props)
 
     this.state = {
-      selectedValue: null
+      selectedValue: this.props.answer
     }
   }
 
@@ -24,10 +24,19 @@ class RadioQuestion extends React.Component {
     this.validate()
   }
 
+  /**
+   * Appends / updates the state for the current answer and calls the prop function
+   * to update the parent with the given answer
+   *
+   * @param e
+   */
   handleChange = (e) => {
     this.setState({
       selectedValue: e.target.value
-    }, () => this.validate())
+    }, () => {
+      this.validate()
+      this.props.setAnswer(this.props.question.id, this.state.selectedValue)
+    })
   }
 
   renderChoices = () => {

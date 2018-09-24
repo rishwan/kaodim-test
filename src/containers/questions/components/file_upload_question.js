@@ -13,9 +13,7 @@ class FileUploadQuestion extends React.Component {
   validate = () => {
     let validity = true
 
-    if (this.props.question.is_required === true && this.state.accepted.length > 0) {
-      validity = true
-    } else {
+    if (this.props.question.is_required === true && this.state.accepted.length === 0) {
       validity = false
     }
 
@@ -23,18 +21,40 @@ class FileUploadQuestion extends React.Component {
   }
 
   componentDidMount () {
+
+    if (this.props.answer) {
+      this.setState({
+        accepted: this.props.answer
+      })
+    }
+
     this.validate()
+  }
+
+  /**
+   * Appends / updates the state for the current files and calls the prop function
+   * to update the parent with the given answer
+   *
+   * @param e
+   */
+  onDrop = (accepted, rejected) => {
+    this.setState({
+      accepted,
+      rejected },
+      () => {
+        this.validate()
+        this.props.setAnswer(this.props.question.id, this.state.accepted)
+    })
   }
 
   renderFile = () => {
     if (this.state.accepted.length > 0) {
-      console.log(this.state.accepted)
 
       return this.state.accepted.map(file => {
         let image = URL.createObjectURL(file)
         return (
           <div className={'img_preview'} key={file.name}>
-            <img src={image} />
+            <img src={image}  alt={"preview"}/>
           </div>
         )
       })
@@ -50,7 +70,7 @@ class FileUploadQuestion extends React.Component {
         {this.renderFile()}
         <div className="dropzone">
           <Dropzone
-            onDrop={(accepted, rejected) => { this.setState({ accepted, rejected }, () => this.validate()); }}
+            onDrop={this.onDrop}
             className={"droparea"}
             accept={this.props.allowed_mime_types}
           >

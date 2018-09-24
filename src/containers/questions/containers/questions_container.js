@@ -9,6 +9,7 @@ import TextQuestion from '../components/text_question'
 import CheckboxQuestion from  '../components/checkbox_question'
 import RadioQuestion from '../components/radio_question'
 import FileUploadQuestion from '../components/file_upload_question'
+import AnswerList from '../components/answer_list'
 import PropTypes from 'prop-types';
 import * as questionActions from '../../../modules/questions'
 
@@ -19,8 +20,21 @@ class QuestionsContainer extends React.Component {
 
     // used to calculate next index / prev index
     this.state = {
-      activeIndex: 0
+      activeIndex: 0,
+      answers: {},
+      showAnswers: false
     }
+  }
+
+  setAnswer = (index, answer) => {
+    const answers = this.state.answers;
+
+    answers[index] = answer
+
+    this.setState({
+      answers
+    })
+
   }
 
   // once the component is mounted, fetch the question list
@@ -43,32 +57,36 @@ class QuestionsContainer extends React.Component {
   // show a loader if the reducer states that its still fetching data
   showLoader = () => {
     if (this.props.isFetching === true) {
-      console.log('rendering loader')
       return (
         <Loader />
       )
     }
   }
 
+
+
   // reviews the currentQuestion store and switches render for the proper questiontype component
   renderQuestion = () => {
+
+    const {currentQuestion} = this.props
+
     if (this.props.currentQuestion) {
-      switch (this.props.currentQuestion.question_type) {
+      switch (currentQuestion.question_type) {
         case "TextQuestion":
           return (
-            <TextQuestion question={this.props.currentQuestion} setValidity={this.props.setAnswerValidity}/>
+            <TextQuestion key={currentQuestion.id} question={currentQuestion} answer={this.state.answers[currentQuestion.id]} setValidity={this.props.setAnswerValidity} setAnswer={this.setAnswer}/>
           )
         case "CheckboxQuestion":
           return (
-            <CheckboxQuestion question={this.props.currentQuestion} setValidity={this.props.setAnswerValidity}/>
+            <CheckboxQuestion key={currentQuestion.id} question={currentQuestion} answer={this.state.answers[currentQuestion.id]} setValidity={this.props.setAnswerValidity} setAnswer={this.setAnswer}/>
           )
         case "RadioQuestion":
           return (
-            <RadioQuestion question={this.props.currentQuestion} setValidity={this.props.setAnswerValidity}/>
+            <RadioQuestion key={currentQuestion.id} question={currentQuestion} answer={this.state.answers[currentQuestion.id]} setValidity={this.props.setAnswerValidity} setAnswer={this.setAnswer}/>
           )
         case "FileUpload":
           return (
-            <FileUploadQuestion question={this.props.currentQuestion} setValidity={this.props.setAnswerValidity}/>
+            <FileUploadQuestion key={currentQuestion.id} question={currentQuestion} answer={this.state.answers[currentQuestion.id]} setValidity={this.props.setAnswerValidity} setAnswer={this.setAnswer}/>
           )
         default:
           return (
@@ -87,7 +105,8 @@ class QuestionsContainer extends React.Component {
     let nextIndex = this.state.activeIndex - 1;
 
     this.setState({
-      activeIndex: nextIndex
+      activeIndex: nextIndex,
+      showAnswers: false,
     }, () => this.props.setActiveQuestion(nextIndex, questions))
   }
 
@@ -95,6 +114,12 @@ class QuestionsContainer extends React.Component {
   changeToNextQuestion = () => {
     const { questions } = this.props.questionList
     let nextIndex = this.state.activeIndex + 1;
+
+    console.log(nextIndex + ' : ' + questions.length)
+
+    if (nextIndex === questions.length) {
+      this.setState({showAnswers: true})
+    }
 
     this.setState({
       activeIndex: nextIndex
@@ -118,6 +143,14 @@ class QuestionsContainer extends React.Component {
     )
   }
 
+  renderAnswers = () => {
+    if (this.state.showAnswers === true) {
+      return (
+        <AnswerList answers={this.state.answers} questions={this.props.questionList.questions}/>
+      )
+    }
+  }
+
   render () {
     return (
       <React.Fragment>
@@ -126,6 +159,7 @@ class QuestionsContainer extends React.Component {
           {this.showLoader()}
           {this.showServerMsg()}
           {this.renderQuestion()}
+          {this.renderAnswers()}
         </div>
         {this.renderFooter()}
       </React.Fragment>

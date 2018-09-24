@@ -6,7 +6,7 @@ class CheckboxQuestion extends React.Component {
     super(props)
 
     this.state = {
-      currentValues: []
+      currentValues: (this.props.answer) ? this.props.answer : []
     }
   }
 
@@ -25,20 +25,34 @@ class CheckboxQuestion extends React.Component {
     this.props.setValidity(validity)
   }
 
+  /**
+   * Appends / updates the state for the current answer and calls the prop function
+   * to update the parent with the given answer
+   *
+   * @param e
+   */
   handleChange = (event) => {
     const target = event.target;
     const value = target.type === 'checkbox' ? target.checked : target.value;
+    const name = target.name
 
     const { currentValues } = this.state
 
-    currentValues.push(value)
+    //console.log(event)
+
+    currentValues[name] = value
 
     this.setState({
-      currentValues: currentValues
-    }, () => this.validate());
+      currentValues
+    }, () => {
+      this.validate()
+      this.props.setAnswer(this.props.question.id, this.state.currentValues)
+    });
   }
 
   renderChoices = () => {
+    const {currentValues} = this.state
+
     return this.props.question.choices.map(choice => {
       return (
         <React.Fragment key={choice.key}>
@@ -46,9 +60,10 @@ class CheckboxQuestion extends React.Component {
             <input
               className={"form-check-input"}
               key={choice.key}
-              name={this.props.question.id}
+              name={choice.key}
               type="checkbox"
               onChange={this.handleChange}
+              defaultChecked={currentValues[choice.key] ? true : false}
             />
             <label className="form-check-label" htmlFor="defaultCheck1">
               {choice.text}
